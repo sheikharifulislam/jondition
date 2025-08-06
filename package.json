@@ -1,16 +1,41 @@
 {
     "name": "jondition",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "description": "A condition logic engine for JavaScript/TypeScript",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "dev": "nodemon --exec ts-node src/index.ts",
         "build": "node ./esbuild.config.js",
         "clean": "rm -rf node_modules dist"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "keywords": [
+        "conditions",
+        "logic-engine",
+        "typescript",
+        "javascript",
+        "rules"
+    ],
+    "author": "Sheikh Ariful Islam",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sheikharifulislam/jondition.git"
+    },
+    "bugs": {
+        "url": "https://github.com/sheikharifulislam/jondition/issues"
+    },
+    "homepage": "https://github.com/sheikharifulislam/jondition#readme",
     "packageManager": "pnpm@10.6.2",
     "devDependencies": {
         "@types/node": "^24.2.0",
