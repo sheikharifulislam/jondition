@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "dev": "nodemon --exec ts-node src/index.ts",
-        "build": "tsc",
+        "build": "node ./esbuild.config.js",
         "clean": "rm -rf node_modules dist"
     },
     "keywords": [],
@@ -14,6 +14,7 @@
     "packageManager": "pnpm@10.6.2",
     "devDependencies": {
         "@types/node": "^24.2.0",
+        "esbuild": "^0.25.8",
         "nodemon": "^3.1.10",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.2"
