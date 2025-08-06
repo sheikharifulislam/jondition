@@ -254,3 +254,5 @@ console.log(jsonConditionParser.evaluate(condition, data));
 // console.log("to the getValueByPath", res);
 // console.log("to the getValueByPath", res2);
 // console.log("to the getValueByPath", res3);
+
+export default JsonConditionParser;
