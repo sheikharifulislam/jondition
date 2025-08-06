@@ -45,7 +45,7 @@ import { isVariable } from "./isVariable";
 //     ],
 // };
 
-type OperatorFunction = (leftExpression: any, rightExpression: any) => boolean;
+type OperatorFunction = (leftExpression: any, rightExpression?: any) => boolean;
 
 type OperatorMap = {
     "===": OperatorFunction;
@@ -54,11 +54,13 @@ type OperatorMap = {
     ">": OperatorFunction;
     "<=": OperatorFunction;
     ">=": OperatorFunction;
+    isTruthy: OperatorFunction;
+    isFalsy: OperatorFunction;
     contains: OperatorFunction;
 };
 
 type Logic = "and" | "or";
-type Operator = "===" | "!==" | "<" | ">" | "<=" | ">=" | "contains";
+type Operator = "===" | "!==" | "<" | ">" | "<=" | ">=" | "isTruthy" | "isFalsy" | "contains";
 
 interface Condition {
     field: string | number | boolean | Array<any> | Object;
@@ -83,6 +85,20 @@ class JsonConditionParser {
             ">": (leftExpression, rightExpression) => leftExpression > rightExpression,
             "<=": (leftExpression, rightExpression) => leftExpression <= rightExpression,
             ">=": (leftExpression, rightExpression) => leftExpression >= rightExpression,
+            isTruthy: (leftExpression) => {
+                if (leftExpression) {
+                    return true;
+                }
+
+                return false;
+            },
+            isFalsy: (leftExpression) => {
+                if (!leftExpression) {
+                    return true;
+                }
+
+                return false;
+            },
             contains: (leftExpression, rightExpression) => {
                 // check if the leftExpression and rightExpression is array.
                 if (Array.isArray(leftExpression) && Array.isArray(rightExpression)) {
@@ -117,6 +133,21 @@ class JsonConditionParser {
             // const { field, operator, value } = conditionConfig;
             return this.evaluateCondition(conditionConfig, data);
         }
+
+        // Handle single boolean expression (just field, no operator/value)
+        if (conditionConfig.field && conditionConfig.operator && !conditionConfig.value) {
+            return this.evaluateBooleanExpression(conditionConfig, data);
+        }
+    }
+
+    evaluateBooleanExpression(condition: Condition, data: any) {
+        const { field: leftExpression, operator } = condition;
+        const leftExpressionValue =
+            typeof leftExpression === "string" && isVariable(leftExpression)
+                ? getValueByPath(leftExpression, data)
+                : leftExpression;
+
+        return this.operators[operator](leftExpressionValue);
     }
 
     evaluateCondition(condition: Condition, data: any) {
@@ -251,7 +282,23 @@ console.log(jsonConditionParser.evaluate(condition, data));
 //     fontSize: "fontSize",
 // });
 
-// console.log("to the getValueByPath", res);
+// console.log(
+//     "to the getValueByPath",
+//     new JsonConditionParser().evaluate(
+//         {
+//             logic: "and",
+//             conditions: [
+//                 {
+//                     field: "{{fontSize}}",
+//                     operator: "isTruthy",
+//                 },
+//             ],
+//         },
+//         {
+//             fontSize: 1,
+//         }
+//     )
+// );
 // console.log("to the getValueByPath", res2);
 // console.log("to the getValueByPath", res3);
 
